@@ -8,27 +8,153 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f2f4f8;color:#202b3c}
-header{background:#14243b;color:white;padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f2f4f8;
+  color:#202b3c;
+}
+
+header{
+  background:#14243b;
+  color:white;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
 header h2{margin:0;color:#f4c76b}
-.container{max-width:1150px;margin:30px auto;padding:15px}
-.login{max-width:420px;margin:65px auto;background:white;padding:30px;border-radius:15px;box-shadow:0 5px 25px #0001}
-input{width:100%;padding:14px;margin:10px 0;border:1px solid #ccd3df;border-radius:8px;font-size:16px}
-button{background:#bd8c32;color:white;border:0;padding:13px 20px;border-radius:8px;cursor:pointer;font-weight:bold}
+
+.container{
+  max-width:1150px;
+  margin:30px auto;
+  padding:15px;
+}
+
+.login{
+  max-width:420px;
+  margin:65px auto;
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 5px 25px #0001;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin:10px 0;
+  border:1px solid #ccd3df;
+  border-radius:8px;
+  font-size:16px;
+}
+
+button{
+  background:#bd8c32;
+  color:white;
+  border:0;
+  padding:13px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
 button:hover{background:#9e7022}
+
 .logout{background:#a43c3c}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:20px}
-.card{background:white;padding:23px;border-radius:12px;box-shadow:0 3px 12px #0001}
-.card h3{color:#a87925;margin-top:0}
-.card p{color:#64748b;line-height:1.5}
-.card button{margin-top:10px}
+
 .hidden{display:none!important}
-#message{color:#b42318;line-height:1.5}
-#loading{text-align:center;padding:40px}
-.welcome{background:#fff;padding:20px;border-radius:12px;margin-bottom:20px}
+
+#loading{
+  text-align:center;
+  padding:40px;
+}
+
+#message,#errorMessage{
+  color:#b42318;
+  line-height:1.5;
+}
+
+.welcome{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:25px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+  margin-top:20px;
+}
+
+.card{
+  background:white;
+  padding:23px;
+  border-radius:12px;
+  box-shadow:0 3px 12px #0001;
+}
+
+.card h3{
+  color:#a87925;
+  margin-top:0;
+}
+
+.card p{
+  color:#64748b;
+  line-height:1.5;
+}
+
+/* LES TROIS BRANCHES TOUJOURS SUR UNE LIGNE */
+#branches{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  width:100%;
+  margin-top:20px;
+}
+
+#branches .card{
+  min-width:0;
+  padding:14px 5px;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+
+#branches .card h3{
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+#branches .card p{
+  font-size:11px;
+  line-height:1.4;
+  margin:5px 0;
+}
+
+.status{
+  color:#16834a!important;
+  font-weight:bold;
+}
+
 .section-title{margin-top:35px}
-footer{text-align:center;color:#8792a2;padding:25px}
-.small{font-size:13px;color:#64748b;word-break:break-all}
+
+footer{
+  text-align:center;
+  color:#8792a2;
+  padding:25px;
+}
+
+@media(max-width:380px){
+  #branches{gap:5px}
+  #branches .card{padding:10px 3px}
+  #branches .card h3{font-size:13px}
+  #branches .card p{font-size:10px}
+}
 </style>
 </head>
 
@@ -46,9 +172,15 @@ footer{text-align:center;color:#8792a2;padding:25px}
   <p>Bienvenue dans HOTEL BAR USA</p>
 
   <form id="loginForm">
-    <input id="email" type="email" placeholder="Adresse e-mail" required>
-    <input id="password" type="password" placeholder="Mot de passe" required>
-    <button type="submit" style="width:100%">SE CONNECTER</button>
+    <input id="email" type="email"
+      placeholder="Adresse e-mail" required>
+
+    <input id="password" type="password"
+      placeholder="Mot de passe" required>
+
+    <button type="submit" style="width:100%">
+      SE CONNECTER
+    </button>
   </form>
 
   <p id="message"></p>
@@ -63,12 +195,14 @@ footer{text-align:center;color:#8792a2;padding:25px}
   </div>
 
   <h2>Nos établissements</h2>
-  <div id="branches" class="cards"></div>
+
+  <div id="branches"></div>
   <p id="branchMessage"></p>
 
   <h2 class="section-title">Gestion des services</h2>
 
   <div class="cards">
+
     <div class="card">
       <h3>🏨 HÔTEL</h3>
       <p>Gestion des chambres, clients, réservations, entrées et sorties.</p>
@@ -116,18 +250,22 @@ footer{text-align:center;color:#8792a2;padding:25px}
       <p>Suivi des casses, pertes et produits endommagés.</p>
       <button onclick="alert('Module Pertes en préparation')">Ouvrir</button>
     </div>
+
   </div>
 
   <h2 class="section-title">Compte utilisateur</h2>
+
   <div class="card">
     <p>Profil : Directeur Général</p>
-    <button class="logout" id="logoutButton">Déconnexion</button>
+    <button class="logout" id="logoutButton">
+      Déconnexion
+    </button>
   </div>
 
 </main>
 
 <div id="errorPage" class="login hidden">
-  <h2>Problème de profil</h2>
+  <h2>Problème de connexion</h2>
   <p id="errorMessage"></p>
   <button id="errorLogout" class="logout">Déconnexion</button>
 </div>
@@ -169,152 +307,166 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ELEMENTS
 const loading = document.getElementById("loading");
 const loginPage = document.getElementById("loginPage");
 const dashboard = document.getElementById("dashboard");
 const errorPage = document.getElementById("errorPage");
 const message = document.getElementById("message");
 
-function hideAll() {
+function hideAll(){
   loading.classList.add("hidden");
   loginPage.classList.add("hidden");
   dashboard.classList.add("hidden");
   errorPage.classList.add("hidden");
 }
 
-function showLogin() {
+function showLogin(){
   hideAll();
   loginPage.classList.remove("hidden");
 }
 
-function showDashboard() {
+function showDashboard(){
   hideAll();
   dashboard.classList.remove("hidden");
 }
 
-function showError(text) {
+function showError(text){
   hideAll();
   errorPage.classList.remove("hidden");
   document.getElementById("errorMessage").textContent = text;
 }
 
 // CONNEXION
-document.getElementById("loginForm").addEventListener("submit", async (event) => {
-  event.preventDefault();
+document.getElementById("loginForm").addEventListener("submit",async(e)=>{
+  e.preventDefault();
 
-  message.textContent = "Connexion en cours...";
+  message.textContent="Connexion en cours...";
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
 
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
+  try{
+    await signInWithEmailAndPassword(auth,email,password);
+  }catch(error){
     console.error(error);
-    message.textContent = "Erreur de connexion : vérifiez votre e-mail et votre mot de passe.";
+    message.textContent="Erreur de connexion. Vérifiez votre e-mail et votre mot de passe.";
   }
 });
 
-// VERIFICATION DU PROFIL
-onAuthStateChanged(auth, async (user) => {
+// VERIFICATION UTILISATEUR
+onAuthStateChanged(auth,async(user)=>{
 
-  if (!user) {
+  if(!user){
     showLogin();
     return;
   }
 
   hideAll();
   loading.classList.remove("hidden");
-  loading.textContent = "Vérification du compte...";
+  loading.textContent="Vérification du compte...";
 
-  try {
+  try{
 
-    // Le document doit avoir exactement le même ID que le UID Firebase
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
+    const userRef=doc(db,"users",user.uid);
+    const userSnap=await getDoc(userRef);
 
-    if (!userSnap.exists()) {
+    if(!userSnap.exists()){
       showError(
-        "Profil utilisateur introuvable. Vérifiez que le document users porte exactement cet UID : " + user.uid
+        "Profil utilisateur introuvable. UID : "+user.uid
       );
       return;
     }
 
-    const profile = userSnap.data();
+    const profile=userSnap.data();
 
-    if (profile.active !== true) {
-      showError("Ce compte est désactivé. Contactez le Directeur Général.");
+    if(profile.active!==true){
+      showError("Ce compte est désactivé.");
       return;
     }
 
-    if (profile.role !== "directeur_general") {
-      showError("Rôle incorrect. La valeur attendue est directeur_general.");
+    if(profile.role!=="directeur_general"){
+      showError(
+        "Rôle incorrect. La valeur attendue est directeur_general."
+      );
       return;
     }
 
-    document.getElementById("welcome").textContent =
-      "Bienvenue, " + (profile.name || "DIRECTEUR GENERAL");
+    document.getElementById("welcome").textContent=
+      "Bienvenue, "+(profile.name||"DIRECTEUR GENERAL");
 
-    document.getElementById("userEmail").textContent = user.email || "";
+    document.getElementById("userEmail").textContent=
+      user.email||"";
 
     showDashboard();
 
     await loadBranches();
 
-  } catch (error) {
+  }catch(error){
 
     console.error(error);
+    showError("Erreur Firebase : "+error.message);
 
-    showError(
-      "Erreur Firebase : " + error.message
-    );
   }
 
 });
 
-// CHARGEMENT DES BRANCHES
-async function loadBranches() {
+// CHARGEMENT ET TRI DES BRANCHES
+async function loadBranches(){
 
-  const area = document.getElementById("branches");
-  const info = document.getElementById("branchMessage");
+  const area=document.getElementById("branches");
+  const info=document.getElementById("branchMessage");
 
-  area.innerHTML = "";
-  info.textContent = "Chargement des établissements...";
+  area.innerHTML="";
+  info.textContent="Chargement des établissements...";
 
-  try {
+  try{
 
-    const snapshot = await getDocs(collection(db, "branches"));
+    const snapshot=await getDocs(collection(db,"branches"));
 
-    if (snapshot.empty) {
-      info.textContent = "Aucun établissement enregistré.";
+    // Tri explicite USA 1, USA 2, USA 3
+    const orderedBranches=snapshot.docs.sort((a,b)=>{
+
+      const nameA=(a.data().name||"").toUpperCase();
+      const nameB=(b.data().name||"").toUpperCase();
+
+      const numberA=parseInt(nameA.replace(/\D/g,""))||999;
+      const numberB=parseInt(nameB.replace(/\D/g,""))||999;
+
+      return numberA-numberB;
+    });
+
+    if(orderedBranches.length===0){
+      info.textContent="Aucun établissement enregistré.";
       return;
     }
 
-    let count = 0;
+    let count=0;
 
-    snapshot.forEach((branchDoc) => {
+    orderedBranches.forEach((branchDoc)=>{
 
-      const branch = branchDoc.data();
+      const branch=branchDoc.data();
 
-      if (branch.active === true) {
+      if(branch.active===true){
 
         count++;
 
-        const card = document.createElement("div");
-        card.className = "card";
+        const card=document.createElement("div");
+        card.className="card";
 
-        const title = document.createElement("h3");
-        title.textContent = "🏢 " + (branch.name || branchDoc.id);
+        const title=document.createElement("h3");
+        title.textContent="🏢 "+(branch.name||"Établissement");
 
-        const description = document.createElement("p");
-        description.textContent = "Code : " + (branch.code || branchDoc.id);
+        const code=document.createElement("p");
 
-        const status = document.createElement("p");
-        status.textContent = "Statut : Établissement actif";
+        // Utilise le champ code, pas le Document ID
+        code.textContent="Code : "+(branch.code||"Non défini");
+
+        const status=document.createElement("p");
+        status.className="status";
+        status.textContent="● Actif";
 
         card.appendChild(title);
-        card.appendChild(description);
+        card.appendChild(code);
         card.appendChild(status);
 
         area.appendChild(card);
@@ -322,29 +474,31 @@ async function loadBranches() {
 
     });
 
-    info.textContent = count + " établissement(s) actif(s).";
+    info.textContent=count+" établissement(s) actif(s).";
 
-  } catch (error) {
+  }catch(error){
 
     console.error(error);
-    info.textContent = "Erreur de chargement des établissements : " + error.message;
+    info.textContent="Erreur de chargement : "+error.message;
 
   }
 }
 
 // DECONNEXION
-async function logout() {
-  try {
+async function logout(){
+  try{
     await signOut(auth);
-  } catch (error) {
-    alert("Erreur de déconnexion : " + error.message);
+  }catch(error){
+    alert("Erreur : "+error.message);
   }
 }
 
-document.getElementById("logoutButton").addEventListener("click", logout);
-document.getElementById("errorLogout").addEventListener("click", logout);
+document.getElementById("logoutButton")
+.addEventListener("click",logout);
+
+document.getElementById("errorLogout")
+.addEventListener("click",logout);
 
 </script>
-
 </body>
 </html>
