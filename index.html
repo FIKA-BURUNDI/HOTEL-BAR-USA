@@ -5,28 +5,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HOTEL BAR USA</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f5f9;color:#202b3c}
-header{background:#14243b;color:white;padding:20px 25px;display:flex;justify-content:space-between;align-items:center}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f4f8;color:#202b3c}
+header{background:#14243b;color:white;padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
 header h2{margin:0;color:#f4c76b}
-.container{max-width:1100px;margin:35px auto;padding:15px}
+.container{max-width:1150px;margin:30px auto;padding:15px}
 .login{max-width:420px;margin:65px auto;background:white;padding:30px;border-radius:15px;box-shadow:0 5px 25px #0001}
-h1,h2{margin-top:0}
-input{width:100%;padding:14px;margin:9px 0;border:1px solid #ccd3df;border-radius:8px;font-size:16px}
+input{width:100%;padding:14px;margin:10px 0;border:1px solid #ccd3df;border-radius:8px;font-size:16px}
 button{background:#bd8c32;color:white;border:0;padding:13px 20px;border-radius:8px;cursor:pointer;font-weight:bold}
 button:hover{background:#9e7022}
 .logout{background:#a43c3c}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:25px}
-.card{background:white;padding:25px;border-radius:12px;box-shadow:0 3px 12px #0001}
-.card h3{color:#a87925}
-.card p{color:#64748b}
-#message{color:#b42318;margin-top:12px}
-.hidden{display:none}
-#loading{padding:20px;text-align:center}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:20px}
+.card{background:white;padding:23px;border-radius:12px;box-shadow:0 3px 12px #0001}
+.card h3{color:#a87925;margin-top:0}
+.card p{color:#64748b;line-height:1.5}
+.card button{margin-top:10px}
+.hidden{display:none!important}
+#message{color:#b42318;line-height:1.5}
+#loading{text-align:center;padding:40px}
+.welcome{background:#fff;padding:20px;border-radius:12px;margin-bottom:20px}
+.section-title{margin-top:35px}
 footer{text-align:center;color:#8792a2;padding:25px}
+.small{font-size:13px;color:#64748b;word-break:break-all}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -39,55 +44,98 @@ footer{text-align:center;color:#8792a2;padding:25px}
 <section id="loginPage" class="login hidden">
   <h2>Connexion</h2>
   <p>Bienvenue dans HOTEL BAR USA</p>
+
   <form id="loginForm">
     <input id="email" type="email" placeholder="Adresse e-mail" required>
     <input id="password" type="password" placeholder="Mot de passe" required>
     <button type="submit" style="width:100%">SE CONNECTER</button>
   </form>
+
   <p id="message"></p>
 </section>
 
 <main id="dashboard" class="container hidden">
-  <h1>Tableau de bord</h1>
-  <p id="welcome">Directeur Général</p>
+
+  <div class="welcome">
+    <h1>Tableau de bord</h1>
+    <p id="welcome">DIRECTEUR GENERAL</p>
+    <p id="userEmail"></p>
+  </div>
+
+  <h2>Nos établissements</h2>
+  <div id="branches" class="cards"></div>
+  <p id="branchMessage"></p>
+
+  <h2 class="section-title">Gestion des services</h2>
 
   <div class="cards">
     <div class="card">
       <h3>🏨 HÔTEL</h3>
-      <p>Gestion des chambres, clients et réservations.</p>
+      <p>Gestion des chambres, clients, réservations, entrées et sorties.</p>
+      <button onclick="alert('Module Hôtel en préparation')">Ouvrir</button>
     </div>
+
     <div class="card">
       <h3>🍹 BAR</h3>
-      <p>Ventes, boissons et gestion du stock.</p>
+      <p>Gestion des boissons, ventes, stocks et recettes.</p>
+      <button onclick="alert('Module Bar en préparation')">Ouvrir</button>
     </div>
+
     <div class="card">
       <h3>🍽️ CUISINE</h3>
-      <p>Commandes, menu et suivi de préparation.</p>
+      <p>Gestion des menus, commandes, préparation et ingrédients.</p>
+      <button onclick="alert('Module Cuisine en préparation')">Ouvrir</button>
     </div>
+
     <div class="card">
       <h3>💰 FINANCES</h3>
-      <p>Recettes, dépenses et rapports financiers.</p>
+      <p>Gestion des recettes, dépenses, bénéfices et paiements.</p>
+      <button onclick="alert('Module Finances en préparation')">Ouvrir</button>
     </div>
+
     <div class="card">
       <h3>👥 PERSONNEL</h3>
-      <p>Gestion des employés et des services.</p>
+      <p>Gestion des employés, responsables et fonctions.</p>
+      <button onclick="alert('Module Personnel en préparation')">Ouvrir</button>
     </div>
+
     <div class="card">
       <h3>📊 RAPPORTS</h3>
-      <p>Rapports journaliers, mensuels et annuels.</p>
+      <p>Rapports journaliers, hebdomadaires, mensuels et annuels.</p>
+      <button onclick="alert('Module Rapports en préparation')">Ouvrir</button>
+    </div>
+
+    <div class="card">
+      <h3>📦 STOCK</h3>
+      <p>Gestion des achats, mouvements et alertes de stock.</p>
+      <button onclick="alert('Module Stock en préparation')">Ouvrir</button>
+    </div>
+
+    <div class="card">
+      <h3>⚠️ PERTES</h3>
+      <p>Suivi des casses, pertes et produits endommagés.</p>
+      <button onclick="alert('Module Pertes en préparation')">Ouvrir</button>
     </div>
   </div>
 
-  <h2 style="margin-top:35px">Nos établissements</h2>
-  <div id="branches" class="cards"></div>
+  <h2 class="section-title">Compte utilisateur</h2>
+  <div class="card">
+    <p>Profil : Directeur Général</p>
+    <button class="logout" id="logoutButton">Déconnexion</button>
+  </div>
 
-  <p id="branchMessage"></p>
-  <button class="logout" id="logoutButton">Déconnexion</button>
 </main>
+
+<div id="errorPage" class="login hidden">
+  <h2>Problème de profil</h2>
+  <p id="errorMessage"></p>
+  <button id="errorLogout" class="logout">Déconnexion</button>
+</div>
 
 <footer>HOTEL BAR USA © 2026</footer>
 
 <script type="module">
+
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
@@ -106,6 +154,7 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
+// CONFIGURATION FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyANRpOxjfcK0l6b5woM2piEepTAi86vLhY",
   authDomain: "hotel-bar-usa.firebaseapp.com",
@@ -120,25 +169,40 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// ELEMENTS
 const loading = document.getElementById("loading");
 const loginPage = document.getElementById("loginPage");
 const dashboard = document.getElementById("dashboard");
+const errorPage = document.getElementById("errorPage");
 const message = document.getElementById("message");
 
-function showLogin() {
+function hideAll() {
   loading.classList.add("hidden");
+  loginPage.classList.add("hidden");
   dashboard.classList.add("hidden");
+  errorPage.classList.add("hidden");
+}
+
+function showLogin() {
+  hideAll();
   loginPage.classList.remove("hidden");
 }
 
 function showDashboard() {
-  loading.classList.add("hidden");
-  loginPage.classList.add("hidden");
+  hideAll();
   dashboard.classList.remove("hidden");
 }
 
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+function showError(text) {
+  hideAll();
+  errorPage.classList.remove("hidden");
+  document.getElementById("errorMessage").textContent = text;
+}
+
+// CONNEXION
+document.getElementById("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
   message.textContent = "Connexion en cours...";
 
   const email = document.getElementById("email").value.trim();
@@ -147,56 +211,79 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
-    message.textContent = "Erreur de connexion. Vérifiez votre e-mail et mot de passe.";
     console.error(error);
+    message.textContent = "Erreur de connexion : vérifiez votre e-mail et votre mot de passe.";
   }
 });
 
+// VERIFICATION DU PROFIL
 onAuthStateChanged(auth, async (user) => {
+
   if (!user) {
     showLogin();
     return;
   }
 
+  hideAll();
   loading.classList.remove("hidden");
-  loginPage.classList.add("hidden");
-  dashboard.classList.add("hidden");
+  loading.textContent = "Vérification du compte...";
 
   try {
+
+    // Le document doit avoir exactement le même ID que le UID Firebase
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      throw new Error("Profil utilisateur introuvable.");
+      showError(
+        "Profil utilisateur introuvable. Vérifiez que le document users porte exactement cet UID : " + user.uid
+      );
+      return;
     }
 
     const profile = userSnap.data();
 
-    if (profile.role !== "directeur_general" || profile.active !== true) {
-      throw new Error("Accès non autorisé.");
+    if (profile.active !== true) {
+      showError("Ce compte est désactivé. Contactez le Directeur Général.");
+      return;
+    }
+
+    if (profile.role !== "directeur_general") {
+      showError("Rôle incorrect. La valeur attendue est directeur_general.");
+      return;
     }
 
     document.getElementById("welcome").textContent =
-      "Bienvenue, " + (profile.name || "Directeur Général");
+      "Bienvenue, " + (profile.name || "DIRECTEUR GENERAL");
+
+    document.getElementById("userEmail").textContent = user.email || "";
 
     showDashboard();
+
     await loadBranches();
 
   } catch (error) {
+
     console.error(error);
-    message.textContent = error.message;
-    await signOut(auth);
-    showLogin();
+
+    showError(
+      "Erreur Firebase : " + error.message
+    );
   }
+
 });
 
+// CHARGEMENT DES BRANCHES
 async function loadBranches() {
+
   const area = document.getElementById("branches");
   const info = document.getElementById("branchMessage");
+
   area.innerHTML = "";
   info.textContent = "Chargement des établissements...";
 
   try {
+
     const snapshot = await getDocs(collection(db, "branches"));
 
     if (snapshot.empty) {
@@ -204,10 +291,16 @@ async function loadBranches() {
       return;
     }
 
+    let count = 0;
+
     snapshot.forEach((branchDoc) => {
+
       const branch = branchDoc.data();
 
       if (branch.active === true) {
+
+        count++;
+
         const card = document.createElement("div");
         card.className = "card";
 
@@ -215,23 +308,43 @@ async function loadBranches() {
         title.textContent = "🏢 " + (branch.name || branchDoc.id);
 
         const description = document.createElement("p");
-        description.textContent = "Établissement actif";
+        description.textContent = "Code : " + (branch.code || branchDoc.id);
 
-        card.append(title, description);
+        const status = document.createElement("p");
+        status.textContent = "Statut : Établissement actif";
+
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(status);
+
         area.appendChild(card);
       }
+
     });
 
-    info.textContent = "";
+    info.textContent = count + " établissement(s) actif(s).";
+
   } catch (error) {
+
     console.error(error);
-    info.textContent = "Impossible de charger les établissements.";
+    info.textContent = "Erreur de chargement des établissements : " + error.message;
+
   }
 }
 
-document.getElementById("logoutButton").addEventListener("click", async () => {
-  await signOut(auth);
-});
+// DECONNEXION
+async function logout() {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    alert("Erreur de déconnexion : " + error.message);
+  }
+}
+
+document.getElementById("logoutButton").addEventListener("click", logout);
+document.getElementById("errorLogout").addEventListener("click", logout);
+
 </script>
+
 </body>
 </html>
