@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOTEL BAR USA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f5f9;color:#202b3c}
+header{background:#14243b;color:white;padding:20px 25px;display:flex;justify-content:space-between;align-items:center}
+header h2{margin:0;color:#f4c76b}
+.container{max-width:1100px;margin:35px auto;padding:15px}
+.login{max-width:420px;margin:65px auto;background:white;padding:30px;border-radius:15px;box-shadow:0 5px 25px #0001}
+h1,h2{margin-top:0}
+input{width:100%;padding:14px;margin:9px 0;border:1px solid #ccd3df;border-radius:8px;font-size:16px}
+button{background:#bd8c32;color:white;border:0;padding:13px 20px;border-radius:8px;cursor:pointer;font-weight:bold}
+button:hover{background:#9e7022}
+.logout{background:#a43c3c}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:25px}
+.card{background:white;padding:25px;border-radius:12px;box-shadow:0 3px 12px #0001}
+.card h3{color:#a87925}
+.card p{color:#64748b}
+#message{color:#b42318;margin-top:12px}
+.hidden{display:none}
+#loading{padding:20px;text-align:center}
+footer{text-align:center;color:#8792a2;padding:25px}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>HOTEL BAR USA</h2>
+  <span>Gestion professionnelle</span>
+</header>
+
+<div id="loading">Chargement...</div>
+
+<section id="loginPage" class="login hidden">
+  <h2>Connexion</h2>
+  <p>Bienvenue dans HOTEL BAR USA</p>
+  <form id="loginForm">
+    <input id="email" type="email" placeholder="Adresse e-mail" required>
+    <input id="password" type="password" placeholder="Mot de passe" required>
+    <button type="submit" style="width:100%">SE CONNECTER</button>
+  </form>
+  <p id="message"></p>
+</section>
+
+<main id="dashboard" class="container hidden">
+  <h1>Tableau de bord</h1>
+  <p id="welcome">Directeur Général</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>🏨 HÔTEL</h3>
+      <p>Gestion des chambres, clients et réservations.</p>
+    </div>
+    <div class="card">
+      <h3>🍹 BAR</h3>
+      <p>Ventes, boissons et gestion du stock.</p>
+    </div>
+    <div class="card">
+      <h3>🍽️ CUISINE</h3>
+      <p>Commandes, menu et suivi de préparation.</p>
+    </div>
+    <div class="card">
+      <h3>💰 FINANCES</h3>
+      <p>Recettes, dépenses et rapports financiers.</p>
+    </div>
+    <div class="card">
+      <h3>👥 PERSONNEL</h3>
+      <p>Gestion des employés et des services.</p>
+    </div>
+    <div class="card">
+      <h3>📊 RAPPORTS</h3>
+      <p>Rapports journaliers, mensuels et annuels.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top:35px">Nos établissements</h2>
+  <div id="branches" class="cards"></div>
+
+  <p id="branchMessage"></p>
+  <button class="logout" id="logoutButton">Déconnexion</button>
+</main>
+
+<footer>HOTEL BAR USA © 2026</footer>
+
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyANRpOxjfcK0l6b5woM2piEepTAi86vLhY",
+  authDomain: "hotel-bar-usa.firebaseapp.com",
+  projectId: "hotel-bar-usa",
+  storageBucket: "hotel-bar-usa.firebasestorage.app",
+  messagingSenderId: "722644890202",
+  appId: "1:722644890202:web:3e19361c255e3fe65c9e63",
+  measurementId: "G-8XPMY8QL64"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const loading = document.getElementById("loading");
+const loginPage = document.getElementById("loginPage");
+const dashboard = document.getElementById("dashboard");
+const message = document.getElementById("message");
+
+function showLogin() {
+  loading.classList.add("hidden");
+  dashboard.classList.add("hidden");
+  loginPage.classList.remove("hidden");
+}
+
+function showDashboard() {
+  loading.classList.add("hidden");
+  loginPage.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+}
+
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  message.textContent = "Connexion en cours...";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    message.textContent = "Erreur de connexion. Vérifiez votre e-mail et mot de passe.";
+    console.error(error);
+  }
+});
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    showLogin();
+    return;
+  }
+
+  loading.classList.remove("hidden");
+  loginPage.classList.add("hidden");
+  dashboard.classList.add("hidden");
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      throw new Error("Profil utilisateur introuvable.");
+    }
+
+    const profile = userSnap.data();
+
+    if (profile.role !== "directeur_general" || profile.active !== true) {
+      throw new Error("Accès non autorisé.");
+    }
+
+    document.getElementById("welcome").textContent =
+      "Bienvenue, " + (profile.name || "Directeur Général");
+
+    showDashboard();
+    await loadBranches();
+
+  } catch (error) {
+    console.error(error);
+    message.textContent = error.message;
+    await signOut(auth);
+    showLogin();
+  }
+});
+
+async function loadBranches() {
+  const area = document.getElementById("branches");
+  const info = document.getElementById("branchMessage");
+  area.innerHTML = "";
+  info.textContent = "Chargement des établissements...";
+
+  try {
+    const snapshot = await getDocs(collection(db, "branches"));
+
+    if (snapshot.empty) {
+      info.textContent = "Aucun établissement enregistré.";
+      return;
+    }
+
+    snapshot.forEach((branchDoc) => {
+      const branch = branchDoc.data();
+
+      if (branch.active === true) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const title = document.createElement("h3");
+        title.textContent = "🏢 " + (branch.name || branchDoc.id);
+
+        const description = document.createElement("p");
+        description.textContent = "Établissement actif";
+
+        card.append(title, description);
+        area.appendChild(card);
+      }
+    });
+
+    info.textContent = "";
+  } catch (error) {
+    console.error(error);
+    info.textContent = "Impossible de charger les établissements.";
+  }
+}
+
+document.getElementById("logoutButton").addEventListener("click", async () => {
+  await signOut(auth);
+});
+</script>
+</body>
+</html>
