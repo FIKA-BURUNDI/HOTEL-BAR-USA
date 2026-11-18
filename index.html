@@ -4,156 +4,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOTEL BAR USA</title>
+<title>HOTEL BAR USA - Gestion</title>
 
 <style>
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f2f4f8;
-  color:#202b3c;
-}
-
-header{
-  background:#14243b;
-  color:white;
-  padding:20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
-header h2{margin:0;color:#f4c76b}
-
-.container{
-  max-width:1150px;
-  margin:30px auto;
-  padding:15px;
-}
-
-.login{
-  max-width:420px;
-  margin:65px auto;
-  background:white;
-  padding:30px;
-  border-radius:15px;
-  box-shadow:0 5px 25px #0001;
-}
-
-input{
-  width:100%;
-  padding:14px;
-  margin:10px 0;
-  border:1px solid #ccd3df;
-  border-radius:8px;
-  font-size:16px;
-}
-
-button{
-  background:#bd8c32;
-  color:white;
-  border:0;
-  padding:13px 20px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-button:hover{background:#9e7022}
-
-.logout{background:#a43c3c}
-
+body{margin:0;font-family:Arial,sans-serif;background:#f3f5f9;color:#202b3c}
+header{background:#142b4a;color:white;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header h2{margin:0}
+button{border:0;border-radius:7px;padding:11px 15px;cursor:pointer;font-weight:bold}
+.primary{background:#1769aa;color:white}
+.danger{background:#b83232;color:white}
+.secondary{background:#e6edf5;color:#20364f}
+main{max-width:1200px;margin:22px auto;padding:0 15px}
+.panel{background:white;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 2px 9px #0000000c}
+input,select{width:100%;padding:12px;border:1px solid #ccd5df;border-radius:7px;margin:6px 0 14px;font-size:15px}
+label{font-weight:bold;font-size:14px}
+.login{max-width:420px;margin:70px auto}
 .hidden{display:none!important}
-
-#loading{
-  text-align:center;
-  padding:40px;
-}
-
-#message,#errorMessage{
-  color:#b42318;
-  line-height:1.5;
-}
-
-.welcome{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:25px;
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  margin-top:20px;
-}
-
-.card{
-  background:white;
-  padding:23px;
-  border-radius:12px;
-  box-shadow:0 3px 12px #0001;
-}
-
-.card h3{
-  color:#a87925;
-  margin-top:0;
-}
-
-.card p{
-  color:#64748b;
-  line-height:1.5;
-}
-
-/* LES TROIS BRANCHES TOUJOURS SUR UNE LIGNE */
-#branches{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  width:100%;
-  margin-top:20px;
-}
-
-#branches .card{
-  min-width:0;
-  padding:14px 5px;
-  text-align:center;
-  overflow-wrap:anywhere;
-}
-
-#branches .card h3{
-  font-size:15px;
-  margin-bottom:10px;
-}
-
-#branches .card p{
-  font-size:11px;
-  line-height:1.4;
-  margin:5px 0;
-}
-
-.status{
-  color:#16834a!important;
-  font-weight:bold;
-}
-
-.section-title{margin-top:35px}
-
-footer{
-  text-align:center;
-  color:#8792a2;
-  padding:25px;
-}
-
-@media(max-width:380px){
-  #branches{gap:5px}
-  #branches .card{padding:10px 3px}
-  #branches .card h3{font-size:13px}
-  #branches .card p{font-size:10px}
+.branches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.branch{background:#edf4fc;border:2px solid #c9dbee;padding:16px;border-radius:10px;text-align:center;cursor:pointer}
+.branch.active{border-color:#1769aa;background:#dcecff}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stat{padding:17px;border-radius:10px;background:#edf3f9}
+.stat small{color:#52657a}
+.stat h2{margin:9px 0 0;font-size:21px}
+.service-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.service{background:#f4f7fb;border-radius:9px;padding:15px}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:11px;border-bottom:1px solid #e5eaf0;text-align:left;font-size:14px}
+th{background:#edf3f9}
+.table-wrap{overflow-x:auto}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#message{padding:12px;border-radius:7px;margin:10px 0;display:none}
+.good{background:#e3f7e9;color:#17632e}
+.bad{background:#ffe8e8;color:#9d2020}
+@media(max-width:700px){
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .branches{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .branch{padding:10px 3px;font-size:12px}
+ .service-stats{grid-template-columns:1fr}
+ .form-grid{grid-template-columns:1fr}
+ header{padding:14px}
 }
 </style>
 </head>
@@ -161,343 +52,471 @@ footer{
 <body>
 
 <header>
-  <h2>HOTEL BAR USA</h2>
-  <span>Gestion professionnelle</span>
+  <h2>🏨 HOTEL BAR USA</h2>
+  <div>
+    <span id="userLabel"></span>
+    <button class="danger" id="logoutBtn">Déconnexion</button>
+  </div>
 </header>
 
-<div id="loading">Chargement...</div>
+<main>
 
-<section id="loginPage" class="login hidden">
+<section id="loginSection" class="panel login">
   <h2>Connexion</h2>
-  <p>Bienvenue dans HOTEL BAR USA</p>
-
-  <form id="loginForm">
-    <input id="email" type="email"
-      placeholder="Adresse e-mail" required>
-
-    <input id="password" type="password"
-      placeholder="Mot de passe" required>
-
-    <button type="submit" style="width:100%">
-      SE CONNECTER
-    </button>
-  </form>
-
-  <p id="message"></p>
+  <p>Accès Directeur Général</p>
+  <label>Email</label>
+  <input id="email" type="email" placeholder="Votre email">
+  <label>Mot de passe</label>
+  <input id="password" type="password" placeholder="Mot de passe">
+  <button class="primary" id="loginBtn" style="width:100%">Se connecter</button>
+  <div id="loginMessage"></div>
 </section>
 
-<main id="dashboard" class="container hidden">
+<section id="appSection" class="hidden">
 
-  <div class="welcome">
-    <h1>Tableau de bord</h1>
-    <p id="welcome">DIRECTEUR GENERAL</p>
-    <p id="userEmail"></p>
+  <div class="panel">
+    <h2>Tableau de bord général</h2>
+    <p>Choisissez un établissement pour consulter sa caisse.</p>
+    <div id="branches" class="branches"></div>
   </div>
 
-  <h2>Nos établissements</h2>
+  <div id="cashSection" class="hidden">
 
-  <div id="branches"></div>
-  <p id="branchMessage"></p>
-
-  <h2 class="section-title">Gestion des services</h2>
-
-  <div class="cards">
-
-    <div class="card">
-      <h3>🏨 HÔTEL</h3>
-      <p>Gestion des chambres, clients, réservations, entrées et sorties.</p>
-      <button onclick="alert('Module Hôtel en préparation')">Ouvrir</button>
+    <div class="panel">
+      <h2 id="branchTitle">Caisse</h2>
+      <p>Une seule caisse générale pour tous les services de cet établissement.</p>
     </div>
 
-    <div class="card">
-      <h3>🍹 BAR</h3>
-      <p>Gestion des boissons, ventes, stocks et recettes.</p>
-      <button onclick="alert('Module Bar en préparation')">Ouvrir</button>
+    <div class="panel">
+      <h3>Situation générale de la caisse</h3>
+      <div class="cards">
+        <div class="stat">
+          <small>Total Hôtel</small>
+          <h2 id="hotelTotal">0 FBu</h2>
+        </div>
+        <div class="stat">
+          <small>Total Bar</small>
+          <h2 id="barTotal">0 FBu</h2>
+        </div>
+        <div class="stat">
+          <small>Total Cuisine</small>
+          <h2 id="cuisineTotal">0 FBu</h2>
+        </div>
+        <div class="stat">
+          <small>Total entrées</small>
+          <h2 id="incomeTotal">0 FBu</h2>
+        </div>
+      </div>
+      <br>
+      <div class="cards">
+        <div class="stat">
+          <small>Total dépenses</small>
+          <h2 id="expenseTotal">0 FBu</h2>
+        </div>
+        <div class="stat">
+          <small>Solde de caisse</small>
+          <h2 id="balanceTotal">0 FBu</h2>
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>🍽️ CUISINE</h3>
-      <p>Gestion des menus, commandes, préparation et ingrédients.</p>
-      <button onclick="alert('Module Cuisine en préparation')">Ouvrir</button>
+    <div class="panel">
+      <h3>Recettes par service</h3>
+      <div class="service-stats">
+        <div class="service">
+          <strong>🏨 Hôtel</strong>
+          <h2 id="hotelDetail">0 FBu</h2>
+        </div>
+        <div class="service">
+          <strong>🍹 Bar</strong>
+          <h2 id="barDetail">0 FBu</h2>
+        </div>
+        <div class="service">
+          <strong>🍽️ Cuisine</strong>
+          <h2 id="cuisineDetail">0 FBu</h2>
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>💰 FINANCES</h3>
-      <p>Gestion des recettes, dépenses, bénéfices et paiements.</p>
-      <button onclick="alert('Module Finances en préparation')">Ouvrir</button>
+    <div class="panel">
+      <h3>Enregistrer une opération</h3>
+
+      <div class="form-grid">
+        <div>
+          <label>Type d'opération</label>
+          <select id="operationType">
+            <option value="entree">Entrée d'argent</option>
+            <option value="sortie">Sortie / Dépense</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Service concerné</label>
+          <select id="service">
+            <option value="Hotel">Hôtel</option>
+            <option value="Bar">Bar</option>
+            <option value="Cuisine">Cuisine</option>
+            <option value="General">Général</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Montant (FBu)</label>
+          <input id="amount" type="number" min="1" placeholder="Ex: 50000">
+        </div>
+
+        <div>
+          <label>Mode de paiement</label>
+          <select id="paymentMethod">
+            <option value="Cash">Espèces</option>
+            <option value="Lumicash">Lumicash</option>
+            <option value="Ecocash">Ecocash</option>
+            <option value="Banque">Banque</option>
+            <option value="Carte">Carte bancaire</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Description</label>
+      <input id="description" type="text" placeholder="Description de l'opération">
+
+      <button class="primary" id="saveOperation">Enregistrer l'opération</button>
+      <div id="message"></div>
     </div>
 
-    <div class="card">
-      <h3>👥 PERSONNEL</h3>
-      <p>Gestion des employés, responsables et fonctions.</p>
-      <button onclick="alert('Module Personnel en préparation')">Ouvrir</button>
-    </div>
-
-    <div class="card">
-      <h3>📊 RAPPORTS</h3>
-      <p>Rapports journaliers, hebdomadaires, mensuels et annuels.</p>
-      <button onclick="alert('Module Rapports en préparation')">Ouvrir</button>
-    </div>
-
-    <div class="card">
-      <h3>📦 STOCK</h3>
-      <p>Gestion des achats, mouvements et alertes de stock.</p>
-      <button onclick="alert('Module Stock en préparation')">Ouvrir</button>
-    </div>
-
-    <div class="card">
-      <h3>⚠️ PERTES</h3>
-      <p>Suivi des casses, pertes et produits endommagés.</p>
-      <button onclick="alert('Module Pertes en préparation')">Ouvrir</button>
+    <div class="panel">
+      <h3>Historique des opérations</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Service</th>
+              <th>Description</th>
+              <th>Mode</th>
+              <th>Montant</th>
+              <th>Utilisateur</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsBody">
+            <tr><td colspan="7">Aucune opération.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </div>
-
-  <h2 class="section-title">Compte utilisateur</h2>
-
-  <div class="card">
-    <p>Profil : Directeur Général</p>
-    <button class="logout" id="logoutButton">
-      Déconnexion
-    </button>
-  </div>
-
+</section>
 </main>
 
-<div id="errorPage" class="login hidden">
-  <h2>Problème de connexion</h2>
-  <p id="errorMessage"></p>
-  <button id="errorLogout" class="logout">Déconnexion</button>
-</div>
-
-<footer>HOTEL BAR USA © 2026</footer>
-
 <script type="module">
-
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
+ getAuth, signInWithEmailAndPassword,
+ onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  collection,
-  getDocs
+ getFirestore, collection, getDocs, getDoc,
+ doc, addDoc, query, orderBy, serverTimestamp,
+ onSnapshot
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 // CONFIGURATION FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyANRpOxjfcK0l6b5woM2piEepTAi86vLhY",
-  authDomain: "hotel-bar-usa.firebaseapp.com",
-  projectId: "hotel-bar-usa",
-  storageBucket: "hotel-bar-usa.firebasestorage.app",
-  messagingSenderId: "722644890202",
-  appId: "1:722644890202:web:3e19361c255e3fe65c9e63",
-  measurementId: "G-8XPMY8QL64"
+ apiKey: "AIzaSyANRpOxjfcK0l6b5woM2piEepTAi86vY",
+ authDomain: "hotel-bar-usa.firebaseapp.com",
+ projectId: "hotel-bar-usa",
+ storageBucket: "hotel-bar-usa.firebasestorage.app",
+ messagingSenderId: "722644890202",
+ appId: "1:722644890202:web:3e19361c255e3fe65c9e63",
+ measurementId: "G-8XPMY8QL64"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const loading = document.getElementById("loading");
-const loginPage = document.getElementById("loginPage");
-const dashboard = document.getElementById("dashboard");
-const errorPage = document.getElementById("errorPage");
-const message = document.getElementById("message");
+let currentUser = null;
+let currentProfile = null;
+let selectedBranch = null;
+let stopTransactions = null;
+let branchesData = [];
 
-function hideAll(){
-  loading.classList.add("hidden");
-  loginPage.classList.add("hidden");
-  dashboard.classList.add("hidden");
-  errorPage.classList.add("hidden");
+const $ = id => document.getElementById(id);
+
+function money(value) {
+ return new Intl.NumberFormat("fr-FR").format(value || 0) + " FBu";
 }
 
-function showLogin(){
-  hideAll();
-  loginPage.classList.remove("hidden");
+function showMessage(text, isError=false) {
+ const box = $("message");
+ box.style.display = "block";
+ box.className = isError ? "bad" : "good";
+ box.textContent = text;
 }
 
-function showDashboard(){
-  hideAll();
-  dashboard.classList.remove("hidden");
+function showLoginMessage(text) {
+ const box = $("loginMessage");
+ box.style.display = "block";
+ box.className = "bad";
+ box.textContent = text;
 }
 
-function showError(text){
-  hideAll();
-  errorPage.classList.remove("hidden");
-  document.getElementById("errorMessage").textContent = text;
-}
+$("loginBtn").addEventListener("click", async () => {
+ const email = $("email").value.trim();
+ const password = $("password").value;
 
-// CONNEXION
-document.getElementById("loginForm").addEventListener("submit",async(e)=>{
-  e.preventDefault();
+ if (!email || !password) {
+   showLoginMessage("Veuillez saisir votre email et mot de passe.");
+   return;
+ }
 
-  message.textContent="Connexion en cours...";
-
-  const email=document.getElementById("email").value.trim();
-  const password=document.getElementById("password").value;
-
-  try{
-    await signInWithEmailAndPassword(auth,email,password);
-  }catch(error){
-    console.error(error);
-    message.textContent="Erreur de connexion. Vérifiez votre e-mail et votre mot de passe.";
-  }
+ try {
+   await signInWithEmailAndPassword(auth, email, password);
+ } catch(error) {
+   showLoginMessage("Erreur de connexion : " + error.message);
+ }
 });
 
-// VERIFICATION UTILISATEUR
-onAuthStateChanged(auth,async(user)=>{
-
-  if(!user){
-    showLogin();
-    return;
-  }
-
-  hideAll();
-  loading.classList.remove("hidden");
-  loading.textContent="Vérification du compte...";
-
-  try{
-
-    const userRef=doc(db,"users",user.uid);
-    const userSnap=await getDoc(userRef);
-
-    if(!userSnap.exists()){
-      showError(
-        "Profil utilisateur introuvable. UID : "+user.uid
-      );
-      return;
-    }
-
-    const profile=userSnap.data();
-
-    if(profile.active!==true){
-      showError("Ce compte est désactivé.");
-      return;
-    }
-
-    if(profile.role!=="directeur_general"){
-      showError(
-        "Rôle incorrect. La valeur attendue est directeur_general."
-      );
-      return;
-    }
-
-    document.getElementById("welcome").textContent=
-      "Bienvenue, "+(profile.name||"DIRECTEUR GENERAL");
-
-    document.getElementById("userEmail").textContent=
-      user.email||"";
-
-    showDashboard();
-
-    await loadBranches();
-
-  }catch(error){
-
-    console.error(error);
-    showError("Erreur Firebase : "+error.message);
-
-  }
-
+$("logoutBtn").addEventListener("click", async () => {
+ await signOut(auth);
 });
 
-// CHARGEMENT ET TRI DES BRANCHES
-async function loadBranches(){
+onAuthStateChanged(auth, async user => {
+ if (!user) {
+   currentUser = null;
+   currentProfile = null;
+   $("loginSection").classList.remove("hidden");
+   $("appSection").classList.add("hidden");
+   $("cashSection").classList.add("hidden");
+   if (stopTransactions) stopTransactions();
+   return;
+ }
 
-  const area=document.getElementById("branches");
-  const info=document.getElementById("branchMessage");
+ currentUser = user;
 
-  area.innerHTML="";
-  info.textContent="Chargement des établissements...";
+ try {
+   const profileRef = doc(db, "users", user.uid);
+   const profileSnap = await getDoc(profileRef);
 
-  try{
+   if (!profileSnap.exists()) {
+     throw new Error("Profil utilisateur introuvable dans Firestore.");
+   }
 
-    const snapshot=await getDocs(collection(db,"branches"));
+   currentProfile = profileSnap.data();
 
-    // Tri explicite USA 1, USA 2, USA 3
-    const orderedBranches=snapshot.docs.sort((a,b)=>{
+   if (currentProfile.role !== "directeur_general" ||
+       currentProfile.active !== true) {
+     throw new Error("Accès réservé au Directeur Général.");
+   }
 
-      const nameA=(a.data().name||"").toUpperCase();
-      const nameB=(b.data().name||"").toUpperCase();
+   $("userLabel").textContent =
+     currentProfile.name || "DIRECTEUR GENERAL";
 
-      const numberA=parseInt(nameA.replace(/\D/g,""))||999;
-      const numberB=parseInt(nameB.replace(/\D/g,""))||999;
+   $("loginSection").classList.add("hidden");
+   $("appSection").classList.remove("hidden");
 
-      return numberA-numberB;
-    });
+   await loadBranches();
 
-    if(orderedBranches.length===0){
-      info.textContent="Aucun établissement enregistré.";
-      return;
-    }
+ } catch(error) {
+   alert(error.message);
+   await signOut(auth);
+ }
+});
 
-    let count=0;
+async function loadBranches() {
+ const snapshot = await getDocs(collection(db, "branches"));
 
-    orderedBranches.forEach((branchDoc)=>{
+ branchesData = snapshot.docs
+   .map(item => ({id:item.id, ...item.data()}))
+   .filter(branch => branch.active === true);
 
-      const branch=branchDoc.data();
+ branchesData.sort((a,b) => {
+   const na = Number((a.code || a.name || "").match(/\d+/)?.[0] || 0);
+   const nb = Number((b.code || b.name || "").match(/\d+/)?.[0] || 0);
+   return na - nb;
+ });
 
-      if(branch.active===true){
+ const container = $("branches");
+ container.innerHTML = "";
 
-        count++;
+ branchesData.forEach(branch => {
+   const card = document.createElement("div");
+   card.className = "branch";
+   card.innerHTML = `
+     <strong>${escapeHtml(branch.name || branch.code || "Etablissement")}</strong>
+     <p>${escapeHtml(branch.code || "")}</p>
+     <small>Établissement actif</small>
+   `;
 
-        const card=document.createElement("div");
-        card.className="card";
-
-        const title=document.createElement("h3");
-        title.textContent="🏢 "+(branch.name||"Établissement");
-
-        const code=document.createElement("p");
-
-        // Utilise le champ code, pas le Document ID
-        code.textContent="Code : "+(branch.code||"Non défini");
-
-        const status=document.createElement("p");
-        status.className="status";
-        status.textContent="● Actif";
-
-        card.appendChild(title);
-        card.appendChild(code);
-        card.appendChild(status);
-
-        area.appendChild(card);
-      }
-
-    });
-
-    info.textContent=count+" établissement(s) actif(s).";
-
-  }catch(error){
-
-    console.error(error);
-    info.textContent="Erreur de chargement : "+error.message;
-
-  }
+   card.addEventListener("click", () => selectBranch(branch, card));
+   container.appendChild(card);
+ });
 }
 
-// DECONNEXION
-async function logout(){
-  try{
-    await signOut(auth);
-  }catch(error){
-    alert("Erreur : "+error.message);
-  }
+function escapeHtml(value) {
+ return String(value).replace(/[&<>"']/g, char => ({
+   "&":"&amp;", "<":"&lt;", ">":"&gt;",
+   '"':"&quot;", "'":"&#039;"
+ }[char]));
 }
 
-document.getElementById("logoutButton")
-.addEventListener("click",logout);
+function selectBranch(branch, card) {
+ document.querySelectorAll(".branch").forEach(item =>
+   item.classList.remove("active")
+ );
+ card.classList.add("active");
 
-document.getElementById("errorLogout")
-.addEventListener("click",logout);
+ selectedBranch = branch;
+ $("cashSection").classList.remove("hidden");
+ $("branchTitle").textContent =
+   "Caisse générale - " + (branch.name || branch.code);
+
+ listenTransactions();
+}
+
+function listenTransactions() {
+ if (stopTransactions) stopTransactions();
+
+ const transactionsRef = collection(
+   db, "branches", selectedBranch.id, "cash_transactions"
+ );
+
+ const q = query(transactionsRef, orderBy("createdAt", "desc"));
+
+ stopTransactions = onSnapshot(q, snapshot => {
+   let hotel = 0;
+   let bar = 0;
+   let cuisine = 0;
+   let income = 0;
+   let expenses = 0;
+
+   const tbody = $("transactionsBody");
+   tbody.innerHTML = "";
+
+   snapshot.forEach(item => {
+     const data = item.data();
+     const amount = Number(data.amount || 0);
+
+     if (data.type === "entree") {
+       income += amount;
+       if (data.service === "Hotel") hotel += amount;
+       if (data.service === "Bar") bar += amount;
+       if (data.service === "Cuisine") cuisine += amount;
+     } else {
+       expenses += amount;
+     }
+
+     const date = data.createdAt?.toDate
+       ? data.createdAt.toDate().toLocaleString("fr-FR")
+       : "En attente";
+
+     const tr = document.createElement("tr");
+     const values = [
+       date,
+       data.type === "entree" ? "Entrée" : "Sortie",
+       data.service || "",
+       data.description || "",
+       data.paymentMethod || "",
+       (data.type === "sortie" ? "- " : "+ ") + money(amount),
+       data.createdBy || ""
+     ];
+
+     values.forEach(value => {
+       const td = document.createElement("td");
+       td.textContent = value;
+       tr.appendChild(td);
+     });
+
+     tbody.appendChild(tr);
+   });
+
+   if (snapshot.empty) {
+     tbody.innerHTML =
+       '<tr><td colspan="7">Aucune opération enregistrée.</td></tr>';
+   }
+
+   $("hotelTotal").textContent = money(hotel);
+   $("barTotal").textContent = money(bar);
+   $("cuisineTotal").textContent = money(cuisine);
+
+   $("hotelDetail").textContent = money(hotel);
+   $("barDetail").textContent = money(bar);
+   $("cuisineDetail").textContent = money(cuisine);
+
+   $("incomeTotal").textContent = money(income);
+   $("expenseTotal").textContent = money(expenses);
+   $("balanceTotal").textContent = money(income - expenses);
+
+ }, error => {
+   showMessage(
+     "Impossible de lire la caisse. Vérifiez les règles Firestore : " +
+     error.message,
+     true
+   );
+ });
+}
+
+$("saveOperation").addEventListener("click", async () => {
+ if (!selectedBranch) {
+   showMessage("Veuillez choisir un établissement.", true);
+   return;
+ }
+
+ const type = $("operationType").value;
+ const service = $("service").value;
+ const amount = Number($("amount").value);
+ const paymentMethod = $("paymentMethod").value;
+ const description = $("description").value.trim();
+
+ if (!amount || amount <= 0) {
+   showMessage("Veuillez saisir un montant valide.", true);
+   return;
+ }
+
+ if (!description) {
+   showMessage("Veuillez saisir une description.", true);
+   return;
+ }
+
+ if (type === "entree" && service === "General") {
+   showMessage("Une recette doit être attribuée à Hôtel, Bar ou Cuisine.", true);
+   return;
+ }
+
+ try {
+   await addDoc(
+     collection(db, "branches", selectedBranch.id, "cash_transactions"),
+     {
+       type,
+       service,
+       amount,
+       paymentMethod,
+       description,
+       createdBy: currentProfile.name || currentUser.email,
+       userId: currentUser.uid,
+       branchId: selectedBranch.id,
+       branchName: selectedBranch.name || selectedBranch.code || "",
+       createdAt: serverTimestamp()
+     }
+   );
+
+   $("amount").value = "";
+   $("description").value = "";
+   showMessage("Opération enregistrée avec succès.");
+
+ } catch(error) {
+   showMessage(
+     "Erreur d'enregistrement : " + error.message,
+     true
+   );
+ }
+});
 
 </script>
 </body>
