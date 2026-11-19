@@ -59,7 +59,9 @@ service cloud.firestore {
       && request.resource.data.confirmedBy == request.auth.uid
       && request.resource.data.amount is number
       && request.resource.data.amount >= 0
+      && request.resource.data.service in ['Hotel','Bar','Cuisine']
       && exists(/databases/$(database)/documents/branches/$(b)/service_cash/$(request.resource.data.service)/closures/$(request.resource.data.date))
+      && request.resource.data.amount == get(/databases/$(database)/documents/branches/$(b)/service_cash/$(request.resource.data.service)/closures/$(request.resource.data.date)).data.countedAmount
       && !exists(/databases/$(database)/documents/branches/$(b)/central_receipts/$(rid));
     allow update, delete: if false;
    }
