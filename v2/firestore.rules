@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signed(){return request.auth != null;}
+  function userPath(){return /databases/$(database)/documents/users/$(request.auth.uid);}
+  function activeUser(){return signed() && exists(userPath()) && get(userPath()).data.active == true;}
+  function role(){return get(userPath()).data.role;}
+  function dg(){return activeUser() && role() == 'directeur_general';}
+  function chef(b){return activeUser() && role() == 'chef_branche' && get(userPath()).data.branchId == b;}
+  function cashier(b,s){return activeUser() && role() == 'caissier' && get(userPath()).data.branchId == b && get(userPath()).data.service == s;}
+  function branchAccess(b){return dg() || chef(b) || (activeUser() && get(userPath()).data.branchId == b);}
+  function serviceAccess(b,s){return dg() || chef(b) || cashier(b,s);}
+  match /users/{uid}{
+   allow read: if dg() || (signed() && request.auth.uid == uid);
+   allow create, update, delete: if dg();
+  }
+  match /branches/{b}{
+   allow read: if branchAccess(b);
+   allow write: if dg();
+   match /service_cash/{s}{
+    allow read: if serviceAccess(b,s);
+    allow write: if dg();
+    match /transactions/{tid}{
+     allow read: if serviceAccess(b,s);
+     allow create: if serviceAccess(b,s)
+      && request.resource.data.service == s
+      && request.resource.data.branchId == b
+      && request.resource.data.userId == request.auth.uid
+      && request.resource.data.deleted == false
+      && request.resource.data.amount is number
+      && request.resource.data.amount > 0
+      && request.resource.data.operationDate is string
+      && !exists(/databases/$(database)/documents/branches/$(b)/service_cash/$(s)/closures/$(request.resource.data.operationDate));
+     allow update: if serviceAccess(b,s)
+      && resource.data.deleted == false
+      && request.resource.data.deleted == true
+      && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deleted','deletedAt','deletedBy','deleteReason','updatedAt'])
+      && (dg()
+       || (chef(b) && request.time < resource.data.createdAt + duration.value(24,'h'))
+       || (cashier(b,s) && resource.data.userId == request.auth.uid && request.time < resource.data.createdAt + duration.value(30,'m')))
+      && request.resource.data.deletedBy == request.auth.uid;
+     allow delete: if false;
+    }
+    match /closures/{dateId}{
+     allow read: if serviceAccess(b,s);
+     allow create: if serviceAccess(b,s)
+      && request.resource.data.service == s
+      && request.resource.data.branchId == b
+      && request.resource.data.closedBy == request.auth.uid
+      && request.resource.data.countedAmount is number
+      && !exists(/databases/$(database)/documents/branches/$(b)/service_cash/$(s)/closures/$(dateId));
+     allow update, delete: if false;
+    }
+   }
+   match /central_receipts/{rid}{
+    allow read: if branchAccess(b);
+    allow create: if (dg() || chef(b))
+      && request.resource.data.branchId == b
+      && request.resource.data.confirmedBy == request.auth.uid
+      && request.resource.data.amount is number
+      && request.resource.data.amount >= 0
+      && exists(/databases/$(database)/documents/branches/$(b)/service_cash/$(request.resource.data.service)/closures/$(request.resource.data.date))
+      && !exists(/databases/$(database)/documents/branches/$(b)/central_receipts/$(rid));
+    allow update, delete: if false;
+   }
+   match /{document=**}{allow read,write:if false;}
+  }
+ }
+}
