@@ -1,7 +1,22 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HOTEL BAR USA — V2</title>
 <style>
-:root{font-family:Arial,sans-serif;color:#203047;background:#f2f5f9}*{box-sizing:border-box}body{margin:0}header{background:#142b4a;color:white;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}main{max-width:1180px;margin:22px auto;padding:0 14px}.panel{background:white;border-radius:12px;padding:18px;margin:0 0 16px;box-shadow:0 2px 9px #0001}.login{max-width:420px;margin:55px auto}label{display:block;font-weight:700;font-size:14px;margin-top:8px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd5df;border-radius:7px;margin:6px 0 12px;font-size:15px}button{border:0;border-radius:7px;padding:11px 15px;font-weight:700;cursor:pointer;background:#1769aa;color:white}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#e6edf5;color:#203047}.danger{background:#b83232}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.stat{background:#edf3f9;padding:14px;border-radius:9px}.stat b{font-size:20px;display:block;margin-top:6px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tabs button.active{background:#0d385f}.notice{padding:12px;border-radius:8px;background:#e8f2fc;margin:10px 0}.good{background:#e3f7e9}.bad{background:#ffe8e8;color:#912323}.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:680px}td,th{text-align:left;padding:10px;border-bottom:1px solid #e5eaf0;font-size:14px}th{background:#edf3f9}.branch{padding:12px;border:1px solid #cbd8e6;border-radius:8px;background:#f5f8fc}.small{font-size:12px;color:#63748a}@media(max-width:600px){header h2{font-size:18px}}
+:root{font-family:Arial,sans-serif;color:#203047;background:#f2f5f9}*{box-sizing:border-box}body{margin:0}header{background:#142b4a;color:white;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}main{max-width:1180px;margin:22px auto;padding:0 14px}.panel{background:white;border-radius:12px;padding:18px;margin:0 0 16px;box-shadow:0 2px 9px #0001}.login{max-width:420px;margin:55px auto}label{display:block;font-weight:700;font-size:14px;margin-top:8px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd5df;border-radius:7px;margin:6px 0 12px;font-size:15px}button{border:0;border-radius:7px;padding:11px 15px;font-weight:700;cursor:pointer;background:#1769aa;color:white}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#e6edf5;color:#203047}.danger{background:#b83232}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.stat{background:#edf3f9;padding:14px;border-radius:9px}.stat b{font-size:20px;display:block;margin-top:6px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tabs button.active{background:#0d385f}.notice{padding:12px;border-radius:8px;background:#e8f2fc;margin:10px 0}.good{background:#e3f7e9}.bad{background:#ffe8e8;color:#912323}.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:680px}td,th{text-align:left;padding:10px;border-bottom:1px solid #e5eaf0;font-size:14px}th{background:#edf3f9}.branch {
+  padding: 16px;
+  border: 2px solid #1769aa;
+  border-radius: 10px;
+  background: #e6f1fc;
+  color: #142b4a;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+  min-height: 60px;
+}
+
+.branch:hover {
+  background: #1769aa;
+  color: white;
+}.small{font-size:12px;color:#63748a}@media(max-width:600px){header h2{font-size:18px}}
 </style></head><body>
 <header><h2>🏨 HOTEL BAR USA — V2</h2><div><span id="who"></span> <button id="logout" class="danger hidden">Déconnexion</button></div></header>
 <main>
