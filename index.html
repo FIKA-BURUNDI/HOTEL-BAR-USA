@@ -1,4 +1,3 @@
-```
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HOTEL BAR USA — V2</title>
 <style>
@@ -10,7 +9,7 @@
 <section id="app" class="hidden">
 <div class="panel"><h2 id="welcome">Tableau de bord</h2><div id="branchPicker" class="grid"></div><p id="branchInfo" class="small"></p></div>
 <div id="workspace" class="hidden">
-<div class="tabs"><button data-tab="overview" class="active">Vue générale</button><button data-tab="operation">Opération / Vente</button><button data-tab="menu" id="menuTab">Gestion du Menu</button><button data-tab="close">Clôture caisse</button><button data-tab="handover">Remise à la caisse centrale</button><button data-tab="history">Historique</button><button data-tab="users" id="usersTab">Utilisateurs</button></div>
+<div class="tabs"><button data-tab="overview" class="active">Vue générale</button><button data-tab="operation">Opération / Vente</button><button data-tab="menu" id="menuTab">Gestion du Menu</button><button data-tab="stock" id="stockTab">Gestion du Stock</button><button data-tab="close">Clôture caisse</button><button data-tab="handover">Remise à la caisse centrale</button><button data-tab="history">Historique</button><button data-tab="users" id="usersTab">Utilisateurs</button></div>
 <section id="overview" class="panel"><h3>Situation de l'établissement</h3><div class="grid" id="serviceStats"></div><section id="dgGlobalPanel" class="notice hidden" style="margin-top:18px"><h3>Tableau global — toutes les branches</h3><p class="small">Vue réservée au Directeur Général. Les montants incluent tous les modes de paiement.</p><div id="dgGlobalContent">Chargement des branches…</div></section><div class="notice" id="centralInfo">Caisse centrale : chargement…</div></section>
 <section id="operation" class="panel hidden"><h3>Commande et facture</h3><div class="notice">Ajoutez plusieurs produits à la même commande. Les produits de Cuisine (ex. brochette simple et brochette poisson) restent sur une seule facture. Le total se calcule automatiquement. Les ventes sont ventilées dans la caisse de leur service.</div>
 <div class="grid"><div><label>Nom du serveur</label><input id="waiterName" placeholder="Nom du serveur" /></div><div><label>Produit du menu</label><select id="saleProduct"><option value="">— Choisir un produit —</option></select></div><div><label>Quantité</label><input id="saleQty" type="number" min="1" value="1" /></div><div><label>Prix unitaire actuel (FBu)</label><input id="saleUnitPrice" type="number" min="0" placeholder="Prix actuel" /></div></div>
@@ -20,6 +19,23 @@
 <button id="save" style="margin-top:12px">Valider la commande et créer la facture</button><button id="clearCart" class="secondary">Vider la commande</button><p id="opMsg" class="notice hidden"></p>
 <hr style="margin:22px 0;border:0;border-top:1px solid #e5eaf0"><h4>Enregistrer une dépense ou une opération libre</h4><div class="grid"><div><label>Service / caisse</label><select id="service"><option value="Hotel">Hôtel</option><option value="Bar">Bar</option><option value="Cuisine">Cuisine</option></select></div><div><label>Type</label><select id="type"><option value="sortie">Dépense</option><option value="entree">Entrée libre</option></select></div><div><label>Montant (FBu)</label><input id="amount" type="number" min="1"></div></div><label>Description / référence</label><textarea id="description" rows="2"></textarea><button id="saveManual">Enregistrer l'opération libre</button></section>
 <section id="menu" class="panel hidden"><h3>Gestion complète du menu de l’établissement</h3><p>Le Chef de Branche gère les produits et tarifs de Restaurant, Bar, Cuisine et Hôtel pour son établissement. Le Directeur Général peut consulter et gérer les menus de toutes les branches.</p><div class="grid"><div><label>Nom du produit / service</label><input id="menuName" placeholder="Ex. Assiette complète"></div><div><label>Catégorie</label><select id="menuCategory"><option value="Restaurant">Restaurant</option><option value="Bar">Bar</option><option value="Cuisine">Cuisine</option><option value="Hôtel">Hôtel</option></select></div><div><label>Prix actuel (FBu)</label><input id="menuPrice" type="number" min="0" placeholder="Ex. 25000"></div></div><button id="menuSave">Ajouter au menu</button><button id="menuCancel" class="secondary hidden">Annuler la modification</button><p id="menuMsg" class="notice hidden"></p><h4>Produits et tarifs actifs</h4><div id="menuList" class="grid"></div><h4>Produits désactivés</h4><div id="menuInactive" class="grid"></div></section>
+<section id="stock" class="panel hidden"><h3>Gestion du stock par service</h3>
+<p class="notice">Le Chef de Branche enregistre les entrées de stock. Les caissiers consultent uniquement le stock de leur service. Chaque vente validée diminue automatiquement le stock.</p>
+<div id="stockManage" class="notice">
+<h4>Enregistrer une entrée / réception de stock</h4>
+<div class="grid">
+<div><label>Produit du menu</label><select id="stockProduct"><option value="">— Choisir un produit —</option></select></div>
+<div><label>Quantité reçue</label><input id="stockQty" type="number" min="0.001" step="0.001" placeholder="Ex. 50"></div>
+<div><label>Unité</label><input id="stockUnit" placeholder="pièces, bouteilles, kg, sacs..."></div>
+<div><label>Seuil d'alerte (stock minimum)</label><input id="stockMin" type="number" min="0" step="0.001" value="5"></div>
+</div>
+<label>Fournisseur / remarque</label><input id="stockNote" placeholder="Nom du fournisseur ou remarque">
+<button id="stockReceive">Enregistrer l'entrée de stock</button><p id="stockMsg" class="notice hidden"></p>
+</div>
+<h4>Stock disponible par service</h4><div class="grid" id="stockSummary"></div>
+<div class="table"><table><thead><tr><th>Service</th><th>Produit</th><th>Stock actuel</th><th>Unité</th><th>Seuil minimum</th><th>État</th></tr></thead><tbody id="stockRows"></tbody></table></div>
+<h4>Historique du stock</h4><div class="table"><table><thead><tr><th>Date</th><th>Service</th><th>Produit</th><th>Opération</th><th>Quantité</th><th>Utilisateur</th><th>Remarque</th></tr></thead><tbody id="stockHistoryRows"></tbody></table></div>
+</section>
 <section id="close" class="panel hidden"><h3>Clôture de la caisse du service</h3><label>Service à clôturer</label><select id="closeService"><option value="Hotel">Hôtel</option><option value="Bar">Bar</option><option value="Cuisine">Cuisine</option></select><div class="grid"><div class="stat">Solde théorique aujourd'hui<b id="expected">0 FBu</b></div><div><label>Espèces réellement comptées (FBu)</label><input id="counted" type="number" min="0"></div></div><button id="closeBtn">Clôturer cette caisse</button><p class="small">La clôture bloque les nouvelles opérations de ce service pour cette date.</p><p id="closeMsg" class="notice hidden"></p></section>
 <section id="handover" class="panel hidden"><h3>Réception par le Chef de Branche</h3><p>Seules les espèces physiques (Cash) sont remises à la caisse centrale. Les paiements électroniques restent séparés.</p><label>Service clôturé</label><select id="handoverService"><option value="Hotel">Hôtel</option><option value="Bar">Bar</option><option value="Cuisine">Cuisine</option></select><label>Montant reçu physiquement (FBu)</label><input id="received" type="number" min="0"><label>Note de vérification</label><input id="handoverNote" placeholder="Écart, remarque…"><button id="receiveBtn">Confirmer la réception</button><p id="handMsg" class="notice hidden"></p><h4>Remises récentes</h4><div class="table"><table><thead><tr><th>Date</th><th>Service</th><th>Montant reçu</th><th>Confirmé par</th></tr></thead><tbody id="handRows"></tbody></table></div></section>
 <section id="history" class="panel hidden"><h3>Historique des opérations</h3><div class="table"><table><thead><tr><th>Date</th><th>Service</th><th>Type</th><th>Description</th><th>Paiement</th><th>Montant</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></section>
@@ -56,7 +72,7 @@ function allowedServices(){
   const service=normalizeService(profile?.service);
   return service?[service]:[];
 }
-function showTab(name){document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));["overview","operation","menu","close","handover","history","users"].forEach(x=>$(x).classList.toggle("hidden",x!==name));if(name==="menu")loadMenu();if(name==="operation")loadMenuForSale()}
+function showTab(name){document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));["overview","operation","menu","stock","close","handover","history","users"].forEach(x=>$(x).classList.toggle("hidden",x!==name));if(name==="menu")loadMenu();if(name==="operation")loadMenuForSale();if(name==="stock")loadStock()}
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 $("loginBtn").onclick=async()=>{try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}catch(e){msg("loginMsg","Connexion impossible : "+e.message,true)}};
 $("logout").onclick=()=>signOut(auth);
@@ -86,7 +102,93 @@ async function loadBranches(){
     await loadGlobalDashboard();
   }
 }
-function selectBranch(b){branch=b;$("workspace").classList.remove("hidden");$("branchInfo").textContent="Établissement : "+(b.name||b.code);$("menuTab").classList.toggle("hidden",!(isDG()||isChef()));let opts=allowedServices();["service","closeService","handoverService"].forEach(id=>{let sel=$(id);sel.innerHTML="";opts.forEach(v=>{let o=document.createElement("option");o.value=v;o.textContent=v;sel.append(o)})});$("handover").classList.toggle("hidden",!(isDG()||isChef()));$("users").classList.add("hidden");loadLive();loadHandover();renderStats();loadMenuForSale();if(isDG())loadEmployees()}
+function selectBranch(b){branch=b;$("workspace").classList.remove("hidden");$("branchInfo").textContent="Établissement : "+(b.name||b.code);$("menuTab").classList.toggle("hidden",!(isDG()||isChef()));$("stockTab").classList.remove("hidden");$("stockManage").classList.toggle("hidden",!(isDG()||isChef()));let opts=allowedServices();["service","closeService","handoverService"].forEach(id=>{let sel=$(id);sel.innerHTML="";opts.forEach(v=>{let o=document.createElement("option");o.value=v;o.textContent=v;sel.append(o)})});$("handover").classList.toggle("hidden",!(isDG()||isChef()));$("users").classList.add("hidden");loadLive();loadHandover();renderStats();loadMenuForSale();if(isDG())loadEmployees()}
+
+function stockCollection(){return collection(db,"branches",branch.id,"stock")}
+function stockMovementCollection(){return collection(db,"branches",branch.id,"stock_movements")}
+async function loadStock(){
+  if(!branch)return;
+  try{
+    const [menuSnap,stockSnap,movementSnap]=await Promise.all([
+      getDocs(collection(db,"branches",branch.id,"menus")),
+      getDocs(query(stockCollection(),where("service","in",allowedServices()))),
+      getDocs(query(stockMovementCollection(),where("service","in",allowedServices())))
+    ]);
+    const allMenu=menuSnap.docs.map(d=>({id:d.id,...d.data()}));
+    menuCache=allMenu.filter(item=>allowedServices().includes(productService(item)));
+    const stocks=new Map(stockSnap.docs.map(d=>[d.id,{id:d.id,...d.data()}]));
+    const visible=allMenu.filter(item=>allowedServices().includes(productService(item)));
+    const sel=$("stockProduct"),current=sel.value;
+    sel.innerHTML="<option value=''>— Choisir un produit —</option>";
+    visible.forEach(item=>{
+      const o=document.createElement("option");o.value=item.id;
+      o.textContent=(item.category||"")+" — "+item.name;sel.append(o);
+    });
+    if(visible.some(x=>x.id===current))sel.value=current;
+    const totals={Hotel:{products:0,low:0},Bar:{products:0,low:0},Cuisine:{products:0,low:0}};
+    $("stockRows").innerHTML="";
+    visible.sort((a,b)=>productService(a).localeCompare(productService(b))||(a.name||"").localeCompare(b.name||"")).forEach(item=>{
+      const svc=productService(item),st=stocks.get(item.id),qty=Number(st?.quantity||0),unit=st?.unit||"—",min=Number(st?.minQuantity??5);
+      totals[svc].products++;if(st&&qty<=min)totals[svc].low++;
+      const tr=document.createElement("tr");
+      [svc,item.name||"",String(qty),unit,String(min),!st?"Non initialisé":qty<=min?"Stock bas":"Disponible"].forEach((v,i)=>{
+        const td=document.createElement("td");td.textContent=v;if(i===5&&st&&qty<=min)td.style.color="#b83232";tr.append(td);
+      });
+      $("stockRows").append(tr);
+    });
+    $("stockSummary").innerHTML="";
+    allowedServices().forEach(s=>{
+      const div=document.createElement("div");div.className="stat";
+      div.textContent=s+" — produits suivis";
+      const b=document.createElement("b");b.textContent=String(totals[s]?.products||0)+" produits";
+      const small=document.createElement("span");small.className="small";small.textContent="Stock bas : "+String(totals[s]?.low||0);
+      div.append(b,small);$("stockSummary").append(div);
+    });
+    const movements=movementSnap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(x=>allowedServices().includes(x.service))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,100);
+    $("stockHistoryRows").innerHTML="";
+    movements.forEach(m=>{
+      const tr=document.createElement("tr");
+      const date=m.createdAt?.toDate?.()?.toLocaleString("fr-FR")||"En cours";
+      const vals=[date,m.service||"",m.productName||"",m.type==="vente"?"Vente":"Entrée",String(m.quantity??""),m.createdBy||"",m.note||""];
+      vals.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.append(td)});
+      $("stockHistoryRows").append(tr);
+    });
+    if(!movements.length)$("stockHistoryRows").innerHTML="<tr><td colspan='7'>Aucun mouvement enregistré.</td></tr>";
+  }catch(e){
+    $("stockRows").innerHTML="<tr><td colspan='6'>Erreur de lecture du stock : "+escapeHtml(e.message)+"</td></tr>";
+    $("stockHistoryRows").innerHTML="";
+  }
+}
+$("stockReceive").onclick=async()=>{
+  if(!(isChef()||isDG())||!branch)return;
+  const productId=$("stockProduct").value,qty=Number($("stockQty").value),unit=$("stockUnit").value.trim()||"unité",
+    min=Number($("stockMin").value),note=$("stockNote").value.trim();
+  const item=menuCache.find(x=>x.id===productId);
+  if(!item){msg("stockMsg","Choisissez un produit du menu.",true);return}
+  const svc=productService(item);
+  if(!allowedServices().includes(svc)||!Number.isFinite(qty)||qty<=0||!Number.isFinite(min)||min<0){
+    msg("stockMsg","Vérifiez le service, la quantité et le seuil minimum.",true);return;
+  }
+  try{
+    const stockRef=doc(db,"branches",branch.id,"stock",productId);
+    const movementRef=doc(stockMovementCollection());
+    await runTransaction(db,async tx=>{
+      const old=await tx.get(stockRef),before=old.exists()?Number(old.data().quantity||0):0,after=before+qty;
+      tx.set(stockRef,{productId,productName:item.name,category:item.category||"",service:svc,branchId:branch.id,quantity:after,unit,minQuantity:min,updatedAt:serverTimestamp(),updatedBy:user.uid},{merge:true});
+      tx.set(movementRef,{type:"entree",quantity:qty,quantityBefore:before,quantityAfter:after,productId,productName:item.name,service:svc,unit,note,branchId:branch.id,userId:user.uid,createdBy:profile.name||user.email,createdAt:serverTimestamp()});
+    });
+    $("stockQty").value="";$("stockNote").value="";
+    msg("stockMsg","Entrée de stock enregistrée : +"+qty+" "+unit+".");
+    await loadStock();
+  }catch(e){msg("stockMsg","Enregistrement du stock impossible : "+e.message,true)}
+};
+$("stockProduct").onchange=()=>{
+  const item=menuCache.find(x=>x.id===$("stockProduct").value);
+  if(item)$("stockUnit").value=item.unit||"unité";
+};
+
 const menuCategories=["Restaurant","Bar","Cuisine","Hôtel"];
 function canManageMenu(){return isDG()||isChef()}
 async function loadMenu(){if(!branch)return;try{const snap=await getDocs(collection(db,"branches",branch.id,"menus"));menuCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.category||"").localeCompare(b.category||"")||(a.name||"").localeCompare(b.name||""));renderMenu();loadMenuForSale()}catch(e){msg("menuMsg","Chargement du menu impossible : "+e.message,true)}}
@@ -167,7 +269,58 @@ function printInvoice(invoice){
   w.document.close();
 }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$("save").onclick=async()=>{const waiter=$("waiterName").value.trim(),total=orderCart.reduce((a,x)=>a+x.quantity*x.unitPrice,0);if(!waiter){msg("opMsg","Indiquez le nom du serveur.",true);return}if(!orderCart.length||total<=0){msg("opMsg","Ajoutez au moins un produit à la commande.",true);return}if(orderCart.length>450){msg("opMsg","La commande contient trop de lignes. Faites plusieurs factures.",true);return}try{$("save").disabled=true;const date=day(),payment=$("payment").value,invoiceRef=doc(collection(db,"branches",branch.id,"invoices")),invoiceId=invoiceRef.id,invoiceNumber="USA-"+date.replaceAll("-","")+"-"+invoiceId.slice(0,6).toUpperCase(),batch=writeBatch(db);const servicesInOrder=[...new Set(orderCart.map(x=>x.service))];for(const service of servicesInOrder){const closure=await getDoc(doc(db,"branches",branch.id,"service_cash",service,"closures",date));if(closure.exists())throw Error("La caisse "+service+" est déjà clôturée aujourd'hui.")}const lines=orderCart.map(x=>({...x,lineTotal:x.quantity*x.unitPrice}));for(const line of lines){const ref=doc(collection(db,"branches",branch.id,"service_cash",line.service,"transactions")),audit=doc(auditRef(branch.id));const data={type:"entree",amount:line.lineTotal,description:line.name+" × "+line.quantity+" | Facture "+invoiceNumber,paymentMethod:payment,operationDate:date,branchId:branch.id,service:line.service,userId:user.uid,createdBy:profile.name||user.email,deleted:false,createdAt:serverTimestamp(),invoiceId,invoiceNumber,waiterName:waiter,invoiceTotal:total,productId:line.productId,productName:line.name,productCategory:line.category,quantity:line.quantity,unitPrice:line.unitPrice};batch.set(ref,data);batch.set(audit,{action:"VENTE_FACTURE",targetId:ref.id,invoiceId,invoiceNumber,service:line.service,actor:user.uid,actorName:profile.name||user.email,branchId:branch.id,createdAt:serverTimestamp(),after:{amount:line.lineTotal,productName:line.name,quantity:line.quantity,unitPrice:line.unitPrice,waiterName:waiter}})}await batch.commit();const invoice={number:invoiceNumber,waiter,lines,total,payment};orderCart=[];renderCart();$("waiterName").value="";msg("opMsg","Facture "+invoiceNumber+" enregistrée. Total : "+money(total));printInvoice(invoice);loadLive()}catch(e){msg("opMsg","Échec de la commande : "+e.message,true)}finally{$("save").disabled=false}};
+$("save").onclick=async()=>{
+  const waiter=$("waiterName").value.trim(),total=orderCart.reduce((a,x)=>a+x.quantity*x.unitPrice,0);
+  if(!waiter){msg("opMsg","Indiquez le nom du serveur.",true);return}
+  if(!orderCart.length||total<=0){msg("opMsg","Ajoutez au moins un produit à la commande.",true);return}
+  if(orderCart.length>100){msg("opMsg","La commande contient trop de lignes pour une transaction sûre. Faites plusieurs factures.",true);return}
+  try{
+    $("save").disabled=true;
+    const date=day(),payment=$("payment").value,invoiceRef=doc(collection(db,"branches",branch.id,"invoices")),
+      invoiceId=invoiceRef.id,invoiceNumber="USA-"+date.replaceAll("-","")+"-"+invoiceId.slice(0,6).toUpperCase();
+    const lines=orderCart.map(x=>({...x,lineTotal:x.quantity*x.unitPrice}));
+    const uniqueProducts=[...new Set(lines.map(x=>x.productId))];
+    const stockRefs=uniqueProducts.map(id=>doc(db,"branches",branch.id,"stock",id));
+    const stockMovementRefs=uniqueProducts.map(()=>doc(stockMovementCollection()));
+    const servicesInOrder=[...new Set(lines.map(x=>x.service))];
+    const closureRefs=servicesInOrder.map(s=>doc(db,"branches",branch.id,"service_cash",s,"closures",date));
+    const saleRefs=lines.map(line=>doc(collection(db,"branches",branch.id,"service_cash",line.service,"transactions")));
+    const auditRefs=lines.map(()=>doc(auditRef(branch.id)));
+    await runTransaction(db,async tx=>{
+      const stockSnaps=[];
+      for(const ref of stockRefs)stockSnaps.push(await tx.get(ref));
+      const closureSnaps=[];
+      for(const ref of closureRefs)closureSnaps.push(await tx.get(ref));
+      const stockById=new Map();
+      uniqueProducts.forEach((id,i)=>{
+        const snap=stockSnaps[i],line=lines.find(x=>x.productId===id);
+        if(!snap.exists())throw Error("Stock non initialisé pour « "+line.name+" ». Le Chef de Branche doit d'abord enregistrer sa quantité.");
+        const data=snap.data(),needed=lines.filter(x=>x.productId===id).reduce((n,x)=>n+x.quantity,0),available=Number(data.quantity||0);
+        if(available<needed)throw Error("Stock insuffisant pour « "+line.name+" » : disponible "+available+" "+(data.unit||"unité")+", demandé "+needed+".");
+        stockById.set(id,{data,needed,available});
+      });
+      closureSnaps.forEach((snap,i)=>{if(snap.exists())throw Error("La caisse "+servicesInOrder[i]+" est déjà clôturée aujourd'hui.")});
+      const beforeByProduct=new Map();
+      uniqueProducts.forEach((id,i)=>{
+        const state=stockById.get(id),after=state.available-state.needed;
+        beforeByProduct.set(id,state.available);
+        tx.set(stockRefs[i],{quantity:after,updatedAt:serverTimestamp(),updatedBy:user.uid},{merge:true});
+        const item=lines.find(x=>x.productId===id);
+        tx.set(stockMovementRefs[i],{type:"vente",quantity:state.needed,quantityBefore:state.available,quantityAfter:after,productId:id,productName:item.name,service:item.service,unit:state.data.unit||"unité",note:"Vente facture "+invoiceNumber,branchId:branch.id,userId:user.uid,createdBy:profile.name||user.email,createdAt:serverTimestamp(),invoiceId,invoiceNumber});
+      });
+      lines.forEach((line,i)=>{
+        const data={type:"entree",amount:line.lineTotal,description:line.name+" × "+line.quantity+" | Facture "+invoiceNumber,paymentMethod:payment,operationDate:date,branchId:branch.id,service:line.service,userId:user.uid,createdBy:profile.name||user.email,deleted:false,createdAt:serverTimestamp(),invoiceId,invoiceNumber,waiterName:waiter,invoiceTotal:total,productId:line.productId,productName:line.name,productCategory:line.category,quantity:line.quantity,unitPrice:line.unitPrice};
+        tx.set(saleRefs[i],data);
+        tx.set(auditRefs[i],{action:"VENTE_FACTURE",targetId:saleRefs[i].id,invoiceId,invoiceNumber,service:line.service,actor:user.uid,actorName:profile.name||user.email,branchId:branch.id,createdAt:serverTimestamp(),after:{amount:line.lineTotal,productName:line.name,quantity:line.quantity,unitPrice:line.unitPrice,waiterName:waiter}});
+      });
+    });
+    const invoice={number:invoiceNumber,waiter,lines,total,payment};
+    orderCart=[];renderCart();$("waiterName").value="";
+    msg("opMsg","Facture "+invoiceNumber+" enregistrée. Le stock a été diminué automatiquement. Total : "+money(total));
+    printInvoice(invoice);loadLive();loadStock();
+  }catch(e){msg("opMsg","Échec de la commande : "+e.message,true)}
+  finally{$("save").disabled=false}
+};
 $("saveManual").onclick=async()=>{
   const s=normalizeService($("service").value);
   const type=$("type").value;
@@ -273,4 +426,3 @@ async function editEmployee(d,x){if(!isDG())return;const name=prompt("Nom comple
 async function toggleEmployee(d,x){if(!isDG())return;const activate=x.active!==true;const question=activate?"Réactiver ce compte employé ?":"Désactiver cet employé ? Il ne pourra plus se connecter à l'application.";if(!confirm(question))return;try{await changeEmployee(d,x,{active:activate,deleted:!activate},activate?"REACTIVATION_EMPLOYE":"DESACTIVATION_EMPLOYE");msg("employeeMsg",activate?"Compte réactivé.":"Compte désactivé. L'accès à l'application est bloqué.");await loadEmployees()}catch(e){msg("employeeMsg","Action impossible : "+e.message,true)}}
 async function loadEmployees(){if(!isDG())return;try{let s=await getDocs(collection(db,"users"));$("userRows").innerHTML="";s.forEach(d=>{let x=d.data(),b=branchesCache.find(v=>v.id===x.branchId),tr=document.createElement("tr");[x.name||"",x.email||"",x.role||"",x.service||"—",b?.name||b?.code||x.branchId||"—",x.active===true?"Actif":"Inactif"].forEach(v=>{let td=document.createElement("td");td.textContent=v;tr.append(td)});let actions=document.createElement("td"),edit=document.createElement("button");edit.className="secondary";edit.textContent="Modifier";edit.onclick=()=>editEmployee(d,x);actions.append(edit);let toggle=document.createElement("button");toggle.className=x.active===true?"danger":"secondary";toggle.style.marginLeft="6px";toggle.textContent=x.active===true?"Désactiver":"Réactiver";toggle.onclick=()=>toggleEmployee(d,x);actions.append(toggle);tr.append(actions);$("userRows").append(tr)})}catch(e){msg("employeeMsg","Lecture des employés impossible : "+e.message,true)}}
 </script></body></html>
-```
