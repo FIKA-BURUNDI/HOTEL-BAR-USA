@@ -1,3 +1,4 @@
+```
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HOTEL BAR USA — V2</title>
 <style>
@@ -10,7 +11,7 @@
 <div class="panel"><h2 id="welcome">Tableau de bord</h2><div id="branchPicker" class="grid"></div><p id="branchInfo" class="small"></p></div>
 <div id="workspace" class="hidden">
 <div class="tabs"><button data-tab="overview" class="active">Vue générale</button><button data-tab="operation">Opération / Vente</button><button data-tab="menu" id="menuTab">Gestion du Menu</button><button data-tab="close">Clôture caisse</button><button data-tab="handover">Remise à la caisse centrale</button><button data-tab="history">Historique</button><button data-tab="users" id="usersTab">Utilisateurs</button></div>
-<section id="overview" class="panel"><h3>Situation de l'établissement</h3><div class="grid" id="serviceStats"></div><div class="notice" id="centralInfo">Caisse centrale : chargement…</div></section>
+<section id="overview" class="panel"><h3>Situation de l'établissement</h3><div class="grid" id="serviceStats"></div><section id="dgGlobalPanel" class="notice hidden" style="margin-top:18px"><h3>Tableau global — toutes les branches</h3><p class="small">Vue réservée au Directeur Général. Les montants incluent tous les modes de paiement.</p><div id="dgGlobalContent">Chargement des branches…</div></section><div class="notice" id="centralInfo">Caisse centrale : chargement…</div></section>
 <section id="operation" class="panel hidden"><h3>Commande et facture</h3><div class="notice">Ajoutez plusieurs produits à la même commande. Les produits de Cuisine (ex. brochette simple et brochette poisson) restent sur une seule facture. Le total se calcule automatiquement. Les ventes sont ventilées dans la caisse de leur service.</div>
 <div class="grid"><div><label>Nom du serveur</label><input id="waiterName" placeholder="Nom du serveur" /></div><div><label>Produit du menu</label><select id="saleProduct"><option value="">— Choisir un produit —</option></select></div><div><label>Quantité</label><input id="saleQty" type="number" min="1" value="1" /></div><div><label>Prix unitaire actuel (FBu)</label><input id="saleUnitPrice" type="number" min="0" placeholder="Prix actuel" /></div></div>
 <button id="addToCart">Ajouter à la commande</button>
@@ -82,6 +83,7 @@ async function loadBranches(){
     let sel=$("empBranch");sel.innerHTML="";
     branchesCache.forEach(b=>{let o=document.createElement("option");o.value=b.id;o.textContent=b.name||b.code||b.id;sel.append(o)});
     await loadEmployees();
+    await loadGlobalDashboard();
   }
 }
 function selectBranch(b){branch=b;$("workspace").classList.remove("hidden");$("branchInfo").textContent="Établissement : "+(b.name||b.code);$("menuTab").classList.toggle("hidden",!(isDG()||isChef()));let opts=allowedServices();["service","closeService","handoverService"].forEach(id=>{let sel=$(id);sel.innerHTML="";opts.forEach(v=>{let o=document.createElement("option");o.value=v;o.textContent=v;sel.append(o)})});$("handover").classList.toggle("hidden",!(isDG()||isChef()));$("users").classList.add("hidden");loadLive();loadHandover();renderStats();loadMenuForSale();if(isDG())loadEmployees()}
@@ -156,8 +158,8 @@ function printInvoice(invoice){
     <p>Merci de votre visite !</p>
 
     <div class="actions">
-      <button class="print" onclick="window.print()">IMPRIMER LA FACTURE</button>
-      <button class="close" onclick="window.close()">NE PAS IMPRIMER / FERMER</button>
+      <button class="print" onclick="window.print()">IMPRIMER OUI</button>
+      <button class="close" onclick="window.close()">IMPRIMER NON / FERMER</button>
     </div>
   </body>
   </html>`);
@@ -208,6 +210,49 @@ $("menuCancel").onclick=resetMenuForm;
 async function toggleMenuItem(item){if(!canManageMenu())return;const active=item.active===false;if(!confirm(active?"Réactiver ce produit ?":"Désactiver ce produit ? Il restera dans l’historique des ventes."))return;try{await updateDoc(doc(db,"branches",branch.id,"menus",item.id),{active,updatedAt:serverTimestamp(),updatedBy:user.uid});await loadMenu()}catch(e){msg("menuMsg","Modification impossible : "+e.message,true)}}
 function loadLive(){if(unsub)unsub();let ref=collection(db,"branches",branch.id,"service_cash");let visibleServices=allowedServices();let jobs=visibleServices.map(async s=>{let snap=await getDocs(collection(db,"branches",branch.id,"service_cash",s,"transactions"));return snap.docs.map(d=>({id:d.id,service:s,...d.data()}))});Promise.all(jobs).then(arr=>{cache=arr.flat().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderHistory();renderStats()}).catch(e=>msg("opMsg","Lecture impossible : "+e.message,true));}
 function renderStats(){let html="";allowedServices().forEach(s=>{let list=cache.filter(t=>t.service===s&&!t.deleted);let inc=list.filter(t=>t.type==="entree").reduce((a,t)=>a+Number(t.amount||0),0),out=list.filter(t=>t.type==="sortie").reduce((a,t)=>a+Number(t.amount||0),0);html+='<div class="stat">'+s+'<b>'+money(inc-out)+'</b><span class="small">Entrées '+money(inc)+' · Dépenses '+money(out)+'</span></div>'});$("serviceStats").innerHTML=html;let central=0;getDocs(collection(db,"branches",branch.id,"central_receipts")).then(s=>{s.forEach(d=>central+=Number(d.data().amount||0));$("centralInfo").textContent="Total confirmé à la caisse centrale : "+money(central)}).catch(()=>{$("centralInfo").textContent="Caisse centrale : accès non configuré par les règles actuelles."});updateExpected()}
+async function loadGlobalDashboard(){
+  const panel=$("dgGlobalPanel"),content=$("dgGlobalContent");
+  if(!isDG()){panel.classList.add("hidden");return}
+  panel.classList.remove("hidden");
+  content.textContent="Chargement des données de toutes les branches…";
+  try{
+    const branchResults=await Promise.all(branchesCache.map(async b=>{
+      const serviceResults=await Promise.all(services.map(async svc=>{
+        const snap=await getDocs(collection(db,"branches",b.id,"service_cash",svc,"transactions"));
+        const txs=snap.docs.map(d=>d.data()).filter(t=>t.deleted!==true);
+        const income=txs.filter(t=>t.type==="entree").reduce((sum,t)=>sum+Number(t.amount||0),0);
+        const expenses=txs.filter(t=>t.type==="sortie").reduce((sum,t)=>sum+Number(t.amount||0),0);
+        return {service:svc,income,expenses,balance:income-expenses};
+      }));
+      return {branch:b,services:serviceResults};
+    }));
+    const totals={};
+    services.forEach(s=>totals[s]={income:0,expenses:0,balance:0});
+    branchResults.forEach(row=>row.services.forEach(v=>{
+      totals[v.service].income+=v.income;
+      totals[v.service].expenses+=v.expenses;
+      totals[v.service].balance+=v.balance;
+    }));
+    let cards='<div class="grid">';
+    services.forEach(s=>{
+      const v=totals[s];
+      cards+='<div class="stat"><strong>'+escapeHtml(s)+'</strong><span class="small">Total des entrées</span><b>'+money(v.income)+'</b><span class="small">Dépenses : '+money(v.expenses)+'</span><span class="small">Solde : '+money(v.balance)+'</span></div>';
+    });
+    const allIncome=services.reduce((n,s)=>n+totals[s].income,0);
+    const allExpenses=services.reduce((n,s)=>n+totals[s].expenses,0);
+    cards+='<div class="stat"><strong>Toutes les branches</strong><span class="small">Total des entrées</span><b>'+money(allIncome)+'</b><span class="small">Dépenses : '+money(allExpenses)+'</span><span class="small">Solde : '+money(allIncome-allExpenses)+'</span></div></div>';
+    let table='<div class="table" style="margin-top:14px"><table><thead><tr><th>Établissement</th><th>Service</th><th>Entrées</th><th>Dépenses</th><th>Solde</th></tr></thead><tbody>';
+    branchResults.forEach(row=>row.services.forEach(v=>{
+      table+='<tr><td>'+escapeHtml(row.branch.name||row.branch.code||row.branch.id)+'</td><td>'+escapeHtml(v.service)+'</td><td>'+money(v.income)+'</td><td>'+money(v.expenses)+'</td><td><strong>'+money(v.balance)+'</strong></td></tr>';
+    }));
+    table+='</tbody></table></div>';
+    content.innerHTML=cards+table;
+    if(!branchResults.length)content.textContent="Aucune branche active n’a été trouvée.";
+  }catch(e){
+    content.textContent="Impossible de charger le tableau global : "+e.message;
+  }
+}
+
 function ageMinutes(t){const created=t.createdAt?.toDate?.()?.getTime?.();return created?Math.max(0,(Date.now()-created)/60000):Infinity}
 function canManageTransaction(t){const mins=ageMinutes(t);return isDG()||(isChef()&&mins<=1440)||(isCashier()&&t.userId===user.uid&&mins<=30)}
 function auditRef(branchId){return collection(db,"branches",branchId,"audit_logs")}
@@ -228,3 +273,4 @@ async function editEmployee(d,x){if(!isDG())return;const name=prompt("Nom comple
 async function toggleEmployee(d,x){if(!isDG())return;const activate=x.active!==true;const question=activate?"Réactiver ce compte employé ?":"Désactiver cet employé ? Il ne pourra plus se connecter à l'application.";if(!confirm(question))return;try{await changeEmployee(d,x,{active:activate,deleted:!activate},activate?"REACTIVATION_EMPLOYE":"DESACTIVATION_EMPLOYE");msg("employeeMsg",activate?"Compte réactivé.":"Compte désactivé. L'accès à l'application est bloqué.");await loadEmployees()}catch(e){msg("employeeMsg","Action impossible : "+e.message,true)}}
 async function loadEmployees(){if(!isDG())return;try{let s=await getDocs(collection(db,"users"));$("userRows").innerHTML="";s.forEach(d=>{let x=d.data(),b=branchesCache.find(v=>v.id===x.branchId),tr=document.createElement("tr");[x.name||"",x.email||"",x.role||"",x.service||"—",b?.name||b?.code||x.branchId||"—",x.active===true?"Actif":"Inactif"].forEach(v=>{let td=document.createElement("td");td.textContent=v;tr.append(td)});let actions=document.createElement("td"),edit=document.createElement("button");edit.className="secondary";edit.textContent="Modifier";edit.onclick=()=>editEmployee(d,x);actions.append(edit);let toggle=document.createElement("button");toggle.className=x.active===true?"danger":"secondary";toggle.style.marginLeft="6px";toggle.textContent=x.active===true?"Désactiver":"Réactiver";toggle.onclick=()=>toggleEmployee(d,x);actions.append(toggle);tr.append(actions);$("userRows").append(tr)})}catch(e){msg("employeeMsg","Lecture des employés impossible : "+e.message,true)}}
 </script></body></html>
+```
